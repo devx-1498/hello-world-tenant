@@ -17,7 +17,6 @@ jobs:
       YAML_PROPERTY_PATH: '.image.tag'
 
     steps:
-      
       - name: Setup gitops repo access
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -26,8 +25,8 @@ jobs:
       - name: Checkout CD repo
         uses: actions/checkout@v4   
         with:
-          repository: ${{ secrets.MANIFEST_REPO }}
           ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
+          repository: ${{ secrets.MANIFEST_REPO }}
           ref: ${{ vars.BRANCH }}
       
       - name: 'Configure git'
