@@ -18,6 +18,6 @@ jobs:
   update-gitops-file:
     uses: ./.github/workflows/update-gitops-file.yaml
     with:
-        image-sha: needs.get-short-sha.outputs.SHORT_SHA
+        image-sha: ${{ needs.get-short-sha.outputs.SHORT_SHA }}
     needs: [call-build-workflow, get-short-sha]
     
