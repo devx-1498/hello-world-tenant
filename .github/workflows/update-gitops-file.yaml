@@ -47,7 +47,7 @@ jobs:
           cd ${{ env.WORKING_DIR }}
           yq -i '${{ env.YAML_PROPERTY_PATH }} = "${{ inputs.image-sha }}"' ${{ env.TARGET_FILE }}
     
-      # - name: Commit and push update
-      #   run: |
-      #     git commit -am "Update image tag for dev"
-      #     git push origin
+      - name: Commit and push update
+        run: |
+          git commit -am "Update image tag for dev"
+          git push origin
