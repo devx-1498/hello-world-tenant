@@ -3,7 +3,6 @@ name: Build and update gitops repo
 on:
   push:
     paths-ignore:
-        - 'README.md'
         - '.github/**'
     branches: [ "main" ]
   workflow_dispatch:
