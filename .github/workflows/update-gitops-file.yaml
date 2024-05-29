@@ -1,0 +1,49 @@
+name: Update tenant repo
+
+on:
+    workflow_call:
+      inputs:
+       image-sha:
+        description: The short SHA of the image
+        default:  'latest'
+        required: true
+        type: string
+jobs:
+  update-gitops-repo:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_FILE: 'values.yaml'
+      WORKING_DIR: 'chart'
+      YAML_PROPERTY_PATH: '.image.tag'
+
+    steps:
+      
+      - name: Setup gitops repo access
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}  
+
+      - name: Checkout CD repo
+        uses: actions/checkout@v4   
+        with:
+          repository: ${{ secrets.MANIFEST_REPO }}
+          ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
+          ref: ${{ vars.BRANCH }}
+      
+      - name: 'Configure git'
+      # From https://github.com/orgs/community/discussions/26560#discussioncomment-3531273
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+    
+
+      - name: Update image tag
+        run: |
+          cd ${{ env.WORKING_DIR }}
+          yq -i '${{ env.YAML_PROPERTY_PATH }} = "${{ inputs.image-sha }}"' ${{ env.TARGET_FILE }}
+    
+      - name: Commit and push update
+        run: |
+          git commit -am "Update image tag for dev"
+          git push origin
