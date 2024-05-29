@@ -8,6 +8,11 @@ on:
         default:  'latest'
         required: true
         type: string
+      secrets:
+        manifest_repo_deploy_key:
+          required: true
+        manifest_repo:
+          required: true  
 jobs:
   update-gitops-repo:
     runs-on: ubuntu-latest
@@ -20,13 +25,13 @@ jobs:
       - name: Setup gitops repo access
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}  
+          ssh-private-key: ${{ secrets.manifest_repo_deploy_key }}  
 
       - name: Checkout CD repo
         uses: actions/checkout@v4   
         with:
-          ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
-          repository: ${{ secrets.MANIFEST_REPO }}
+          ssh-key: ${{ secrets.manifest_repo_deploy_key }}
+          repository: ${{ secrets.manifest_repo }}
           ref: ${{ vars.BRANCH }}
       
       - name: 'Configure git'

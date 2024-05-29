@@ -2,8 +2,6 @@ name: Build and update gitops repo
 
 on:
   push:
-    paths-ignore:
-        - '.github/**'
     branches: [ "main" ]
   workflow_dispatch:
     
@@ -16,6 +14,9 @@ jobs:
     
   update-gitops-file:
     uses: ./.github/workflows/update-gitops-file.yaml
+    secrets:
+      manifest_repo_deploy_key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
+      manifest_repo: $${{ secrets.MANIFEST_REPO }}
     with:
         image-sha: ${{ needs.get-short-sha.outputs.SHORT_SHA }}
     needs: [call-build-workflow, get-short-sha]
