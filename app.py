@@ -13,7 +13,7 @@ def hello():
     return '<h1><center>Hello! Hello!</center></h1>'
 
 @app.route('/bye')
-def hello():
+def bye():
     return '<h1><center>Goodbye!</center></h1>'
 
 @app.route('/test')
